@@ -8,9 +8,9 @@ if(isset($_POST['submit']))
         $photo = new Photo();
         $photo->title = $_POST['title'];
         $photo->set_file($_FILES['file_upload']);
-        if($photo->save())
+        if($photo->save_photo())
         {
-            $message = "Photo uploaded Succesfully";
+            $message = "<h4 style='color:green;'>Photo uploaded Succesfully</h4>";
         }
         else{
             $message = join("<br>", $photo->errors);
@@ -47,7 +47,7 @@ if(isset($_POST['submit']))
                 <div class="col-lg-12">
                     <h1 class="page-header">
                         Uploads 
-                        <small>Subheading</small>
+                        
                     </h1>
                 <div class=" col-md-6">
                     <?php  if(isset($_POST['submit'])){echo $message;}?>

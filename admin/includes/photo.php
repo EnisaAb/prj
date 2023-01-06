@@ -3,11 +3,13 @@ class Photo extends Db_object
 {
   
     protected static $db_table = "photos";
-    protected static $db_table_fields = array('title', 'description', 'filename','type','size');
-    public $photo_id;
+    protected static $db_table_fields = array('id','title', 'caption','description', 'filename','alternate','type','size','alternate','');
+    public $id;
     public $title;
+    public $caption;
     public $description;
     public $filename;
+    public $alternate;
     public $type;  
     public $size;
     public $tmp_path;
@@ -47,11 +49,16 @@ class Photo extends Db_object
             $this->size     = $file['size'];
         }
     }
+
+    public function pictures_path()
+    {
+        return $this->upload_directory . DS . $this->filename;
+    }
    
 //function to save that file to a path
-public function save()
+public function save_photo()
 {
-    if($this->photo_id)
+    if($this->id)
     {
         $this->update();
     }
@@ -92,9 +99,34 @@ public function save()
 }
 
 
-
-
+public function delete_photo()
+{
+    if($this->delete())
+    {
+            $target_path = SITE_ROOT . DS . 'admin' . DS . $this->pictures_path();
+            return unlink($target_path) ? true : false;
+           
+    }
+    else
+    {
+            return false;
+    }
 }
+
+    public static function display_sidebar_data($photo_id)
+    {
+        $photo=Photo::find_byId($photo_id);
+            $output = "<a class='thumbnail' href='#'><img width='100' src='{$photo->pictures_path()}'> </a>";
+            $output .= "<p>{$photo->filename}</p>";
+            $output .= "<p>{$photo->type}</p>";
+            $output .= "<p>{$photo->size}</p>";
+            echo $output;
+    }
+    
+}
+
+
+
 
 
 

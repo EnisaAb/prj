@@ -1,14 +1,16 @@
 <?php 
 class Db_object{
     protected static $db_table = "users";
+    protected static $db_table_fields;
+    public $id;
     public static function find_all()
     {
        return static::find_this_query("SELECT * FROM ".static::$db_table ." ");
     }
-    public static function find_byId($user_id)
+    public static function find_byId($id)
     {
         global $database;
-        $the_result_array = static::find_this_query("SELECT * FROM ". static::$db_table ." WHERE id= $user_id");
+        $the_result_array = static::find_this_query("SELECT * FROM ". static::$db_table ." WHERE id=$id");
         return !empty($the_result_array) ? array_shift($the_result_array) : false;
        
 
@@ -29,17 +31,13 @@ class Db_object{
     {
         $calling_class = get_called_class();
         $the_object             = new $calling_class();
-        // $the_object->id         = $found_user['id'];
-        // $the_object->username   = $found_user['username'];
-        // $the_object->password   = $found_user['password'];
-        // $the_object->first_name = $found_user['first_name'];
-        // $the_object->last_name  = $found_user['last_name'];
-        foreach($the_record as $the_attribute => $value)
-        if($the_object->has_the_attribute($the_attribute))
-        {
-            $the_object->$the_attribute = $value;
-        }
-        return $the_object;
+        foreach ($the_record as $the_attribute => $value) 
+            if ($the_object->has_the_attribute($the_attribute))
+            {
+                $the_object->$the_attribute = $value;
+            }
+            return $the_object;
+        
     }
     private function has_the_attribute($the_attribute)
     {
@@ -51,13 +49,11 @@ class Db_object{
     {
 
         $properties = array();
-        foreach(static::$db_table_fields as $db_field)
-        {
-          if(property_exists($this,$db_field))
-          {
+        foreach (static::$db_table_fields as $db_field) 
+            if (property_exists($this, $db_field)) {
                 $properties[$db_field] = $this->$db_field;
-          }  
-        }
+            }
+        
         return $properties;
     }
 
@@ -65,7 +61,7 @@ class Db_object{
     {
         global $database;
         $clean_properties = array();
-        foreach($this-> properties() as $key=>$value)
+        foreach($this->properties() as $key=>$value)
         {
             $clean_properties[$key] = $database->escape($value);
         }
@@ -122,6 +118,15 @@ class Db_object{
             return false;
         }
 
+    }
+    public static function count_all()
+    {
+        global $database;
+        $sql = "SELECT COUNT(*) FROM " . static::$db_table;
+        $result_set = $database->query($sql);
+        $row = mysqli_fetch_array($result_set);
+        array_shift($row);
+        return $row;
     }
 }
 
