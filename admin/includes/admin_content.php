@@ -9,14 +9,19 @@
                         </h1>
                         <?php
                         // $user = new User();
-                        // $user->username = "almaaa";
-                        // $user->password = "12";
-                        // $user->first_name = "almaa";
+                        // $user->username = "ddsfa";
+                        // $user->password = "3211";
+                        // $user->first_name = "ermira";
                         // $user->last_name = "Abazi";
                         // $user->create();
-                        $user=User::find_users_byId(4);
-                        $user->password = "almaaa";
-                        $user->update();
+                        // $user=User::find_users_byId(4);
+                        // $user->password = "almaaa";
+                        // $user->update();
+                        // $photos = Photo::find_all();
+                        // foreach($photos as $photo)
+                        // {
+                        //     echo $photo->title;
+                        // }
                         ?>
                         <ol class="breadcrumb">
                             <li>
